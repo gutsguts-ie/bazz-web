@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Next.js / Netlify
+# Next.js / Netlify / Amplify
 .next
 next-env.d.ts
 .netlify
@@ -31,3 +31,4 @@ next-env.d.ts
 # Local env (holds the private backend URL)
 .env
 .env*.local
+.amplify-hosting

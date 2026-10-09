@@ -1,0 +1,24 @@
+# AWS Amplify Hosting (Next.js SSR via Amplify Hosting compute).
+# Set API_BASE_URL, NEXT_PUBLIC_SITE_THEME (and optionally NEXT_PUBLIC_LIVECHAT_LICENSE)
+# under App settings → Environment variables. One Amplify app per theme.
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm use 22
+        - npm ci
+    build:
+      commands:
+        # Amplify only exposes env vars at build time. Write the server-only ones
+        # into .env.production so the /api and /storage proxy can read them at runtime.
+        - echo "API_BASE_URL=$API_BASE_URL" >> .env.production
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .next/cache/**/*
+      - node_modules/**/*

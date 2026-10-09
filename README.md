@@ -29,5 +29,10 @@ trust the proxy for per-user rate limiting to keep working.
 
 ## Deploy
 
-Netlify builds from `netlify.toml`. Create one Netlify site per theme and set the variables
-above in each site's environment settings.
+One site per theme on either host; set the variables above in each site's settings.
+
+- **Netlify:** builds from `netlify.toml`.
+- **AWS Amplify Hosting:** builds from `amplify.yml`. Amplify only exposes env vars at
+  build time, so the build writes `API_BASE_URL` into `.env.production` for the server
+  runtime. Amplify supports Next.js up to 15, which is why `next` is pinned to 15.5.x.
+  Amplify doesn't support response streaming, so proxied responses are buffered.
