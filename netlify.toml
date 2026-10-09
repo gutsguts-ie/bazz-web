@@ -1,0 +1,6 @@
+# Netlify detects Next.js and runs route handlers (the /api and /storage
+# proxy in src/app) as Netlify Functions automatically.
+# Set API_BASE_URL and NEXT_PUBLIC_SITE_THEME in Site settings → Environment variables.
+[build]
+  command = "npm run build"
+  publish = ".next"
