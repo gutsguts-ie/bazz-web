@@ -179,12 +179,6 @@ export default function Hero() {
       ? "space-y-8 text-center max-w-3xl mx-auto w-full"
       : "space-y-8 text-center lg:text-left"
 
-  const logoLinkClass = textIsCentered
-    ? "mx-auto w-fit"
-    : textIsStackTopLeft
-      ? "w-fit"
-      : "mx-auto lg:mx-0 w-fit"
-
   const descClass = textIsCentered
     ? "mx-auto"
     : textIsStackTopLeft

@@ -320,7 +320,7 @@ const detectCountry = () => {
     if (detectedCode) {
       return countries.find(c => c.code === detectedCode) || countries.find(c => c.code === "SG")
     }
-  } catch (error) {
+  } catch {
     console.log("Could not detect timezone")
   }
   

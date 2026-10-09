@@ -31,7 +31,6 @@ export default function CitizenshipAssessment() {
     languageIntegration: ""
   })
   const [result, setResult] = useState(null)
-  const [errors, setErrors] = useState({})
 
   // Get all steps - all questions are shown regardless of PR status
   const getSteps = () => {

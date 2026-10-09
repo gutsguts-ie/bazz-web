@@ -503,9 +503,6 @@ export default function ApplicationStatus() {
       )
   )
   const hasMissingDocuments = missingDocumentIds.length > 0
-  const hasCollectionInfo =
-    !!application.collection_date || !!application.collection_location
-
   const allDocumentTypes = [
     ...flattenDocuments(documentTypes),
     ...flattenDocuments(additionalDocumentTypes)
@@ -1007,23 +1004,7 @@ export default function ApplicationStatus() {
               .map(doc => doc.document_id)
               .filter(Boolean)
 
-            // Check if all required document types have been submitted
-            const allRequiredSubmitted =
-              requiredDocumentTypeIds.length === 0 ||
-              requiredDocumentTypeIds.every(id =>
-                submittedDocumentTypeIds.includes(id)
-              )
-
-            // Check if all submitted additional documents are approved
-            const allAdditionalApproved =
-              additionalDocuments.length === 0 ||
-              additionalDocuments.every(doc => doc.status === 'approved')
-
             const hasNoAdditionalDocuments = additionalDocuments.length === 0
-            // Get missing required documents
-            const missingApprovedDocuments =
-              additionalDocuments.length > 0 ||
-              additionalDocuments.every(doc => doc.status !== 'approved')
 
             const missingDocumentIds = requiredDocumentTypeIds.filter(
               id =>
@@ -1061,18 +1042,9 @@ export default function ApplicationStatus() {
             // But not red if we have the special case above
             const isRed = hasMissingDocuments && !isInProgressWithBoth
 
-            // State 2: Pending documents (uploaded but not approved) - Green with "进行中"
-            const isPendingGreen = hasPendingDocuments && !hasMissingDocuments
-
             // State 3: No collection info and no issues - Grey with "提交中"
             const isGrey =
               !hasCollectionInfo &&
-              !hasMissingDocuments &&
-              !hasPendingDocuments
-
-            // State 4: Has collection info and all clear - Green with "已批准"
-            const isApprovedGreen =
-              hasCollectionInfo &&
               !hasMissingDocuments &&
               !hasPendingDocuments
 

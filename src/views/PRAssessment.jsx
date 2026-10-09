@@ -29,7 +29,6 @@ export default function PRAssessment() {
     certifications: ""
   })
   const [result, setResult] = useState(null)
-  const [errors, setErrors] = useState({})
 
   // Get all steps
   const getSteps = () => {
@@ -63,17 +62,11 @@ export default function PRAssessment() {
       setResult({
         score,
         eligible: score >= 60,
-        recommendations: getRecommendations(score, formData)
+        recommendations: getRecommendations(score)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData, step])
-
-  const handleNext = () => {
-    if (step < totalSteps) {
-      setStep(step + 1)
-    }
-  }
 
   const handleBack = () => {
     if (step > 1) {
@@ -184,7 +177,7 @@ export default function PRAssessment() {
     return Math.min(score, 100)
   }
 
-  const getRecommendations = (score, data) => {
+  const getRecommendations = (score) => {
     const recommendations = []
     if (score < 60) {
       recommendations.push(t("prAssessment.rec1"))

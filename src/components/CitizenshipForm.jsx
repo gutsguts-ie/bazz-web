@@ -7,7 +7,7 @@ import { PhoneInput } from "./ui/phone-input"
 import { Button } from "./ui/button"
 import { FileText } from "lucide-react"
 
-export default function CitizenshipForm({ formData, updateFormData, step, setStep, handleSubmit }) {
+export default function CitizenshipForm({ formData, updateFormData, step, setStep }) {
   const { t } = useTranslation()
 
   if (step === 2) {

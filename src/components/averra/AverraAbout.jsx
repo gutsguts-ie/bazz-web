@@ -188,7 +188,7 @@ function PullQuote({ text, source }) {
       </div>
       <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-brand-royal-500/30 rounded-full blur-3xl" />
       <blockquote className="relative text-xl sm:text-2xl md:text-3xl font-serif italic leading-snug text-white/95 max-w-3xl">
-        "{text}"
+        &quot;{text}&quot;
       </blockquote>
       <figcaption className="relative mt-6 text-sm text-white/60 tracking-wide">
         {source}
