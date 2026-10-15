@@ -44,6 +44,38 @@ async function handle(response, fallbackMsg) {
   throw err;
 }
 
+// Amplify's server proxy rejects request bodies over ~6 MB, so larger files are
+// sent in pieces to /api/uploads/chunk and then referenced by
+// `<field>_upload_id`; the backend reassembles them. Smaller files go as-is.
+const CHUNK_SIZE = 2 * 1024 * 1024;
+
+// Append `file` to formData as `field`, chunk-uploading it first if it's large.
+async function appendFile(formData, field, file) {
+  if (file.size <= CHUNK_SIZE) {
+    formData.append(field, file);
+    return;
+  }
+
+  const uploadId = crypto.randomUUID();
+  const total = Math.ceil(file.size / CHUNK_SIZE);
+  for (let index = 0; index < total; index++) {
+    const chunk = new FormData();
+    chunk.append('upload_id', uploadId);
+    chunk.append('index', index);
+    chunk.append('total', total);
+    chunk.append('name', file.name);
+    chunk.append('chunk', file.slice(index * CHUNK_SIZE, (index + 1) * CHUNK_SIZE), file.name);
+
+    const response = await fetch(`${API_BASE_URL}/api/uploads/chunk`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: chunk,
+    });
+    await handle(response, 'Failed to upload file');
+  }
+  formData.append(`${field}_upload_id`, uploadId);
+}
+
 export const api = {
   async submitContact(data) {
     const response = await fetch(`${API_BASE_URL}/api/contact`, {
@@ -137,13 +169,13 @@ export const api = {
     const formData = new FormData();
 
     // Add all form fields
-    Object.keys(data).forEach(key => {
+    for (const key of Object.keys(data)) {
       if (key === 'idPhoto' && data[key] instanceof File) {
-        formData.append('id_photo', data[key]);
+        await appendFile(formData, 'id_photo', data[key]);
       } else if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
         formData.append(key, data[key]);
       }
-    });
+    }
 
     const response = await fetch(`${API_BASE_URL}/api/application`, {
       method: 'POST',
@@ -174,7 +206,7 @@ export const api = {
 
   async uploadDocument(code, file, documentId) {
     const formData = new FormData();
-    formData.append('file', file);
+    await appendFile(formData, 'file', file);
     formData.append('document_id', documentId);
 
     const response = await fetch(`${API_BASE_URL}/api/application/${code}/documents`, {
